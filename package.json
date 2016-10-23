@@ -1,0 +1,12 @@
+{
+  "name": "npm-yarn",
+  "version": "1.0.4",
+  "main": "index.js",
+  "license": "MIT",
+  "bin": {
+   "npm": "bin/npm"
+  },
+  "devDependencies": {
+	"yarn":"^0.16.1"
+  }
+}

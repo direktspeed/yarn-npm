@@ -1,0 +1,135 @@
+#!/bin/bash
+(set -o igncr) 2>/dev/null && set -o igncr; # cygwin encoding fix
+
+basedir=`dirname "$0"`
+
+case `uname` in
+    *CYGWIN*) basedir=`cygpath -w "$basedir"`;;
+esac
+
+NODE_EXE="$basedir/node.exe"
+if ! [ -x "$NODE_EXE" ]; then
+  NODE_EXE=node
+fi
+
+NPM_CLI_JS="$basedir/node_modules/npm/bin/npm-cli.js"
+
+case `uname` in
+  *MINGW*)
+    NPM_PREFIX=`"$NODE_EXE" "$NPM_CLI_JS" prefix -g`
+    NPM_PREFIX_NPM_CLI_JS="$NPM_PREFIX/node_modules/npm/bin/npm-cli.js"
+    if [ -f "$NPM_PREFIX_NPM_CLI_JS" ]; then
+      NPM_CLI_JS="$NPM_PREFIX_NPM_CLI_JS"
+    fi
+    ;;
+  *CYGWIN*)
+    NPM_PREFIX=`"$NODE_EXE" "$NPM_CLI_JS" prefix -g`
+    NPM_PREFIX_NPM_CLI_JS="$NPM_PREFIX/node_modules/npm/bin/npm-cli.js"
+    if [ -f "$NPM_PREFIX_NPM_CLI_JS" ]; then
+      NPM_CLI_JS="$NPM_PREFIX_NPM_CLI_JS"
+    fi
+    ;;
+esac
+
+#set -- "${@:1}" "new" "${@:2}"
+
+STR=$@
+
+if [[ $STR == *"-v"* ]]
+then
+	yarn -V
+	exit 0
+fi
+
+
+
+
+if [[ $STR == *"--loglevel error"* ]]
+then
+  echo "--loglevel It's there!";
+  echo Current: $STR
+  STR=$(echo "$@" | sed -r 's/--loglevel error//g' | xargs)
+  echo "$STR" | awk '{print NF}'
+  echo New: $STR
+
+fi
+
+
+
+if [[ $STR == *"--global"* ]]
+then
+  echo "global It's there!";
+ echo Current: $STR
+  STR=$(echo "$@" | sed -r 's/--global//g' | xargs)
+  ISGLOBAL="global"
+  echo New: $STR
+        echo "$STR" | awk '{print NF}'
+
+fi
+
+if [[ $STR == *"--install"* ]]
+then
+  echo "install option It's there!";
+  STR=$(echo "${@:2}" | sed -r 's/--install//g' | xargs)
+  CMDSTR="add $ISGLOBAL"
+  echo "$STR" | awk '{print NF}'
+
+fi
+
+
+if [[ $STR == *"install "* ]]
+then
+  echo "install It's there!";
+  STR=$(echo "$STR" | sed -r 's/install//' | xargs)
+  CMDSTR="add $ISGLOBAL"
+   echo "$STR" | awk '{print NF}'
+fi
+
+if [[ $STR == *"i "* ]]
+then
+  echo "i It's there!";
+  STR=$(echo "$STR" | sed -r 's/i //')
+  CMDSTR="add $ISGLOBAL"
+  echo "$STR" | awk '{print NF}'
+fi
+
+#  [--save|--save-dev|--save-optional] [--save-exact]
+
+if [[ $STR == *"--save"* ]]
+then
+  echo "--save It's there!";
+  STR=$(echo "$STR" | sed -r 's/--save//g')
+  echo "$STR" | awk '{print NF}'
+
+fi
+
+if [[ $STR == *"-dev"* ]]
+then
+  echo "-dev It's there!";
+  STR=$(echo "$STR" | sed -r 's/-dev//g')
+  echo "$STR" | awk '{print NF}'
+
+fi
+
+if [[ $STR == *"-v"* ]]
+then
+  echo "-v It's there!";
+  STR=$(echo "$STR" | sed -r 's/-v/-V/')
+fi
+
+
+if [[ $STR == *"-optional"* ]]
+then
+  echo "-optional It's there!";
+  STR=$(echo "$STR" | sed -r 's/-optional//g')
+fi
+
+if [[ $STR == *"-exact"* ]]
+then
+  echo "-exact It's there!";
+  STR=$(echo "$STR" | sed -r 's/-exact//g')
+fi
+
+echo "yarn $CMDSTR $STR"
+yarn $CMDSTR $STR --ignore-engines
+# "$NODE_EXE" "$NPM_CLI_JS" "$@"

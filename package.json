@@ -1,10 +1,10 @@
 {
   "name": "npm-yarn",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "publish": "git commit -am autocommit && git push origin --all && git push origin --tags",
+    "publish": "git push origin --all && git push origin --tags",
     "release:prerelease": "yarn publish",
     "release:patch": "yarn publish --new-version patch",
     "release:minor": "yarn publish --new-version minor",

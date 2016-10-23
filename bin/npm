@@ -130,6 +130,18 @@ then
   STR=$(echo "$STR" | sed -r 's/-exact//g')
 fi
 
+
 echo "yarn $CMDSTR $STR"
-yarn $CMDSTR $STR --ignore-engines
+CMDENGINS="--ignore-engines"
+
+
+if [[ $STR == *"--new-version"* ]]
+then
+  echo "--new-version It's there!";
+  CMDENGINS=""
+  #STR=$(echo "$STR" | sed -r 's/-exact//g')
+fi
+
+
+yarn $CMDSTR $STR $CMDENGINS
 # "$NODE_EXE" "$NPM_CLI_JS" "$@"
